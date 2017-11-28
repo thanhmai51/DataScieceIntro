@@ -1,0 +1,101 @@
+---
+title: "database connection"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## R Markdown
+
+This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+
+When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. 
+
+The following is the setup for accessing a Postgres database remotely. That is, the database is live and not local to the R system.  You can download retrievals into tidydata.
+
+```{r setup, include=FALSE}
+#library(tidyverse)
+library(mosaic)
+library(dplyr)
+require("RPostgreSQL")
+#set up the driver --depends on the database installation (mysql, access, sqlserver are other options)
+driver = dbDriver("PostgreSQL")
+#set up a connection by "loggin in" the to server.  The connection is your link to the database
+############# GO AHEAD AND USE user="rhodes" #################
+conn = dbConnect(driver,dbname="pres",host="itcsdbms.juniata.edu",user="rhodes", port=5432)
+
+```
+
+Simple commands.
+Verify that the database tables are what are expected by printing the connection variable
+
+```{r}
+conn
+#Can look at existence of any table in the database
+dbExistsTable(conn,'presidents')
+```
+
+Simple selecting/printing of a database table 
+```{r}
+dbGetQuery(conn,"select * from presidents")
+```
+Can store the results in a tidydata set
+
+Don't confuse the SQL select --the primary retrieval command in SQL
+with select function in R -- choose columns from a data set
+```{r}
+tbl = dbGetQuery(conn, "select * from states")
+select(tbl, state, pop)
+```
+but you can do the column selection in the SQL select
+```{r}
+query = "SELECT P.Pres,spouse    
+FROM presidents p   
+WHERE p.birthdate>'1900-jan-1'"
+stateTbl = dbGetQuery(conn, query)
+stateTbl
+```
+
+
+1. Find names of presidents who were Democrat.
+```{r}
+
+```
+
+2. Find names of presidents who were neither Republican or Democrat.
+```{r}
+
+```
+
+3. Find names and spouses of presidents who were from California.
+```{r}
+
+```
+
+4. Find home states and state populations whose presidents are still living.
+```{r}
+
+```
+
+5. Find home states and populations of Democrat presidents.
+```{r}
+
+```
+
+6. Find presidents whose home state's population is greater than 10,000,000.
+```{r}
+
+```
+
+7. Find states that have less than 20 electoral votes and had a president.
+```{r}
+
+```
+
+8. Find the years when the Republican party won the election, show the president, years and their home  states.
+```{r}
+
+```
+

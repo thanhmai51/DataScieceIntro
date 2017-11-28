@@ -1,0 +1,77 @@
+---
+title: "Web Scraping Data"
+author: "Kim Roth"
+date: "11/6/2017"
+output: html_document
+---
+This activity is based on an activity by Chris Malone and Silas Bergen found here http://course1.winona.edu/cmalone/workshops/uscots2015/.
+
+```{r}
+library(XML)
+library(tidyverse)
+```
+
+Now let's load some data from http://en.wikipedia.org/wiki/Demographics_of_the_United_States Because wikipedia is not cooperating well right now, we'll load from a local copy of the data instead 'http://course1.winona.edu/cmalone/workshops/uscots2015/RWebScrape/Demographic_WikiPage.htm
+```{r}
+
+all<- readHTMLTable('http://course1.winona.edu/cmalone/workshops/uscots2015/RWebScrape/Demographic_WikiPage.htm')
+
+class(all) # so it's a list
+length(all) #of 39 which is the number of tables.
+
+```
+This will take some cleaning. Let's look at names and some of the elements. Note that the format for calling variables is not pretty.
+```{r}
+names(all)
+all[[1]] #table number 1
+all[[5]] # table number 5
+all[[6]] #table number 6
+all[[7]] #table number 7
+
+```
+
+For the graphs we had earlier we want tables 5 and 7. So let's name them and then check them. Table 5 first.
+```{r}
+bd <- all[[5]] #bd stands for births and deaths
+head(bd)
+names(bd) #Note lots of these names have spaces which is not preferable and year is unlabeled
+
+bd=rename(bd,Year="", AvgPop="Average population (x 1,000)[40]",LiveBirths= "Live births",NaturalChange="Natural change", CrudeBirthRate="Crude birth rate (per 1,000)", CrudeDeathRate="Crude death rate (per 1,000)[41]",NaturalChangePer1000= "Natural change (per 1,000)",FertilityRate="Total fertility rate") #Fixing the names 
+head(bd)
+
+```
+
+How does the data look? 
+1. Make a scatter plot of Year by Live Births.
+```{r}
+
+```
+That's not working. Why? Examine the data more. 
+```{r}
+
+```
+2. What's wrong? What do we need to fix?
+
+
+Here is code that fixes it.
+```{r}
+bd=mutate(bd,Year=as.numeric(Year), AvgPop=as.numeric(gsub(',','',AvgPop)),LiveBirths=as.numeric(gsub(',','',LiveBirths)),Deaths=as.numeric(gsub(',','',Deaths)), NaturalChange=as.numeric(gsub(',','',NaturalChange)),CrudeBirthRate=as.numeric(CrudeBirthRate),CrudeDeathRate=as.numeric(CrudeDeathRate), NaturalChangePer1000=as.numeric(NaturalChangePer1000), FertilityRate=as.numeric(FertilityRate)) #Fixing the variables
+
+
+```
+3. What is as.numeric fixing? What does gsub fix?
+
+4. Make a scatter plot of Year by Live Births and Deaths like the one in the handout. It does not need to be exactly the same.
+```{r}
+
+```
+
+5. Make a scatterplot of Year by BirthRate and DeathRate like the one in the handout. It does not need to be exactly the same.
+```{r}
+
+```
+
+6. Now take the data in table 7, rename it, clean it and make a graph similar to the third graph in the handout.
+
+
+7. Find a data set you would lke to scrape on the internet. Attempt to scrape the website. If it works look at the scraped data. If it doesn't look at the data displayed on the webiste. What was your data set and what webpage was it on? What cleaning issues can you see/imagine will occur when you scrape the data?
